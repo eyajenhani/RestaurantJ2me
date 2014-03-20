@@ -1,18 +1,6 @@
 package restaurantj2me;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-
-import java.io.DataInputStream;
 import java.io.IOException;
-import javax.microedition.io.CommConnection;
-import javax.microedition.io.Connector;
-import javax.microedition.io.HttpConnection;
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Command;
@@ -31,6 +19,10 @@ import javax.microedition.midlet.*;
  */
 public class Midlet extends MIDlet implements CommandListener,Runnable{
 Display dis =  Display.getDisplay(this);    
+String url;
+String resultat;
+Connexion t = new Connexion();
+ Client[] clients;
 //Paged'accueil
     Form accueil = new Form("                           RESTO-TUNISIE");
     Image imageAccueil;
@@ -44,9 +36,9 @@ Display dis =  Display.getDisplay(this);
     Form profil = new Form("                           Profil");
     StringItem nom = new StringItem("Nom", null);
     StringItem prenom = new StringItem("Prénom", null);
-    StringItem Login = new StringItem("Mail", null);
+    StringItem mail = new StringItem("Mail", null);
     StringItem password = new StringItem("Mot de passe", null);
-    StringItem adresse= new StringItem("Adresse", null);
+    StringItem date= new StringItem("Date", null);
     Ticker tick_client = new Ticker("Vous êtes le bienvenus dans votre espace");
     Command p_modifier = new Command("Modifier profil", Command.OK, 0);
     Command ch_nom= new Command("Chercher par nom", Command.OK, 2);
@@ -88,11 +80,12 @@ erreur = new Alert(null,"votre mail ou mot de passe est invalide", alert, AlertT
     profil.setTicker(tick_client);
     profil.append(nom);
     profil.append(prenom);
-    profil.append(Login);
+    profil.append(mail);
     profil.append(password);
-    profil.append(adresse);
+    profil.append(date);
     profil.setCommandListener(this);
     profil.addCommand(t_soire);
+    profil.addCommand(p_modifier);
     profil.addCommand(ch_nom);
     profil.addCommand(ch_type);
     profil.addCommand(ch_sp);
@@ -109,43 +102,43 @@ erreur = new Alert(null,"votre mail ou mot de passe est invalide", alert, AlertT
 
     public void commandAction(Command c, Displayable d) {
       if (c == cnx) {
-            validate();
+   
+    validate();
+ 
+        }
+      if (c == deco) {
+            dis.setCurrent(accueil);
         }
     }
 
        public void run() {
-        HttpConnection hc;
-        DataInputStream dc;
-        StringBuffer str = new StringBuffer("");
-        String url = "http://127.0.0.1/J2ME/login.php?";
-        String nom1, pd, parametre;
-        nom1 = login.getString();
-        pd = pwd.getString();
-        parametre = "mail=" + nom1 + "&password=" + pd.replace(' ', '+');
-        try {
-            hc = (HttpConnection) Connector.open(url + parametre);
-            dc = new DataInputStream(hc.openInputStream());
-            int ch;
-            while ((ch = dc.read()) != -1) {
-                str.append((char) ch);
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        String resultat = str.toString().trim();
-           System.out.println(resultat);
+      
+        resultat = t.ConnexionChaine(login.getString(),pwd.getString());
+       
  if(resultat.equalsIgnoreCase("invalide"))
          {
          dis.setCurrent(erreur);
          }   
  else if(resultat.equalsIgnoreCase("client"))
- {
- dis.setCurrent(profil);
+ {  
+     
+clients=t.ConnexionListe(mail.getText(),pwd.getString());
+        if (clients.length > 0) {
+                for (int i = 0; i < clients.length; i++) {
+                    nom.setText(clients[i].getNom());
+                   prenom.setText(clients[i].getPrenom());
+                    mail.setText(clients[i].getMail());
+                    password.setText(clients[i].getPassword());
+                    date.setText(clients[i].getDate());
+                }
+            }
+        dis.setCurrent(profil);
  }
 }
+   
        public void validate() {
-        Thread t = new Thread(this);
-        t.start();
+        Thread th = new Thread(this);
+        th.start();
     }
        
 }
