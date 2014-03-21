@@ -95,7 +95,7 @@ public class ClientHandler extends DefaultHandler{
             else
                     if (dateTag.equals("open")) {
                 String date_naissance = new String(ch, start, length).trim();
-                currentClient.setDate(date_naissance);
+                currentClient.setDate_naissance(date_naissance);
             }
         }
     }

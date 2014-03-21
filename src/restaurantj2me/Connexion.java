@@ -58,8 +58,9 @@ public class Connexion {
             ClientHandler clientsHandler = new ClientHandler();
             // get a parser object
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+            url = "http://127.0.0.1/J2ME/RecuperationProfil.php?";
             // get an InputStream from somewhere (could be HttpConnection, for example)
-            HttpConnection hc = (HttpConnection) Connector.open("http://127.0.0.1/J2ME/RecuperationProfil.php?mail=hedi&password=hedi");
+            HttpConnection  hc = (HttpConnection) Connector.open(url + parametre);
             DataInputStream dis = new DataInputStream(hc.openDataInputStream());
             parser.parse(dis, clientsHandler);
             // display the result
@@ -71,7 +72,29 @@ public class Connexion {
         return clients;
     }
 
+     public String Modification_profil(String login, String pwd,String nlogin, String npwd,String nom, String prenom,String date) 
+    {
+       
+        HttpConnection hc;
+        DataInputStream dc;
+        StringBuffer str = new StringBuffer("");
+        String parametre;  
+        parametre = "mail=" + login + "&pwd=" + pwd + "&nmail=" + nlogin + "&npwd=" + npwd + "&nom=" + nom + "&prenom=" + prenom + "&date=" + date;
+        try {
+             url = "http://127.0.0.1/J2ME/modifier_profil.php?";
+            hc = (HttpConnection) Connector.open(url + parametre);
+            dc = new DataInputStream(hc.openInputStream());
+            int ch;
+            while ((ch = dc.read()) != -1) {
+                str.append((char) ch);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        String resultat = str.toString().trim();
+        return resultat;
    
+    }
 
     
     }

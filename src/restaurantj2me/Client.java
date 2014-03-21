@@ -48,7 +48,7 @@ public class Client {
         this.statut = statut;
     }
 
-    public void setDate(String date) {
+    public void setDate_naissance(String date) {
         this.date = date;
     }
 
