@@ -62,11 +62,16 @@ String reponse;
     Command nouv = new Command("Nouveautés", Command.OK, 1);
     Command deco = new Command("Deconnecter", Command.CANCEL, 0);
     //modifier profil
-       TextField tnom= new TextField("Nom", null, 50, TextField.ANY);
+    Image confirmer;
+    Alert ok;
+    Form modifier_profil = new Form("                           Modifier Profil");
+    TextField tnom= new TextField("Nom", null, 50, TextField.ANY);
     TextField tprenom= new TextField("Prenom", null, 50, TextField.ANY);
     TextField tmail= new TextField("Login", null, 50, TextField.ANY);
     TextField tpassword= new TextField("Mot de passe", null, 50, TextField.ANY);
     DateField date = new DateField("Date naissance", DateField.DATE);
+     Command modifier = new Command("Modifier", Command.OK, 1);
+      Command retour = new Command("Retoure", Command.OK, 0);
     
     
     
@@ -83,7 +88,7 @@ String reponse;
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-erreur = new Alert(null,"votre mail ou mot de passe est invalide", alert, AlertType.ERROR);
+erreur = new Alert(null,null, alert, AlertType.ERROR);
           try {
              imageAccueil = Image.createImage("/logo.png");
         } catch (IOException ex) {
@@ -112,8 +117,25 @@ erreur = new Alert(null,"votre mail ou mot de passe est invalide", alert, AlertT
     profil.addCommand(nouv);
     profil.addCommand(deco);
     //modifier profil
-     Date d = new Date();
+          try {
+          confirmer = Image.createImage("/confirmer.png");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+          ok = new Alert(null,"     Taitement effectuer avec succé", confirmer, AlertType.INFO);
+
+    Date d = new Date();
     date.setDate(d);
+    modifier_profil.setCommandListener(this);
+    modifier_profil.addCommand(modifier);
+    modifier_profil.addCommand(retour);
+    modifier_profil.setTicker(tick_client);
+    modifier_profil.append(tnom);
+    modifier_profil.append(tprenom);
+    modifier_profil.append(tmail);
+    modifier_profil.append(tpassword);
+    modifier_profil.append(date);
+     
     }
 
     public void pauseApp() {
@@ -127,6 +149,34 @@ erreur = new Alert(null,"votre mail ou mot de passe est invalide", alert, AlertT
           reponse="connexionchaine";
             validate();
         }
+      else if (c==modifier_p)
+      {
+      dis.setCurrent(modifier_profil);
+      }
+      else if(c == modifier)
+      {
+          if((tmail.getString().length()==0)||(tpassword.getString().length()==0)||(tnom.getString().length()==0)||(tprenom.getString().length()==0))
+          {
+          erreur.setString("il y a un champ vide");
+          dis.setCurrent(erreur);
+          }
+          else
+          {
+       
+      reponse="modifier";
+            validate();
+      }
+      }
+       else if((c == retour)&&(d==modifier_profil))
+      {
+      dis.setCurrent(profil);
+      }
+         else if(c ==deco)
+      {
+     dis.setCurrent(accueil);
+     mail.setString("");
+     pwd.setString("");
+      }
     }
 
        public void run() {
@@ -134,7 +184,7 @@ erreur = new Alert(null,"votre mail ou mot de passe est invalide", alert, AlertT
            {
       resultat=cx.ConnexionChaine(mail.getString(), pwd.getString());
  if(resultat.equalsIgnoreCase("invalide"))
-         {
+         {erreur.setString("votre mail ou mot de passe est invalide");
          dis.setCurrent(erreur);
          }        
  else if(resultat.equalsIgnoreCase("client"))
@@ -146,16 +196,19 @@ erreur = new Alert(null,"votre mail ou mot de passe est invalide", alert, AlertT
                     sprenom.setText(clients[i].getPrenom());
                     smail.setText(clients[i].getMail());
                     spassword.setText(clients[i].getPassword());
-                     sdate.setText(clients[i].getDate());
-                    
+                     sdate.setText(clients[i].getDate());  
                 }
             }
 
  dis.setCurrent(profil);
  } }           
- else if (reponse=="connexionchaine")
+ else if (reponse=="modifier")
                {
-       }
+                   String d =date.getDate().toString().replace(' ','*');                 
+resultat=cx.Modification_profil (mail.getString(),pwd.getString(),tmail.getString(),tpassword.getString(),tnom.getString(),tprenom.getString(),d);     
+    dis.setCurrent(ok);
+    
+               }
            
 }
        public void validate() {
