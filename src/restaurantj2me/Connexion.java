@@ -79,7 +79,8 @@ public class Connexion {
         DataInputStream dc;
         StringBuffer str = new StringBuffer("");
         String parametre;  
-        parametre = "mail=" + login + "&pwd=" + pwd + "&nmail=" + nlogin + "&npwd=" + npwd + "&nom=" + nom + "&prenom=" + prenom + "&date=" + date;
+        parametre = "mail=" + login + "&pwd=" + pwd + "&nmail=" + nlogin + "&npwd=" + npwd + "&nom=" + nom + "&prenom=" + prenom + "&date=" + date.trim();
+        System.out.println("aaaaa"+parametre);
         try {
              url = "http://127.0.0.1/J2ME/modifier_profil.php?";
             hc = (HttpConnection) Connector.open(url + parametre);
@@ -95,7 +96,31 @@ public class Connexion {
         return resultat;
    
     }
-
+public String ConnexionXY(String login, String pwd,double x,double y) 
+    {
+       
+        HttpConnection hc;
+        DataInputStream dc;
+        StringBuffer str = new StringBuffer("");
+        
+        String parametre;
+        
+        parametre = "mail=" + login + "&password=" + pwd + "&x=" + x + "&y=" + y;
+        try {
+             url = "http://127.0.0.1/J2ME/ajoutermap.php?";
+            hc = (HttpConnection) Connector.open(url + parametre);
+            dc = new DataInputStream(hc.openInputStream());
+            int ch;
+            while ((ch = dc.read()) != -1) {
+                str.append((char) ch);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        String resultat = str.toString().trim();
+        return resultat;
+   
+    }
     
     }
 

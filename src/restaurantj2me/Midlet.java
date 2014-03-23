@@ -19,7 +19,6 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
-import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.StringItem;
 import javax.microedition.lcdui.TextField;
 import javax.microedition.lcdui.Ticker;
@@ -44,23 +43,19 @@ String reponse;
     TextField pwd= new TextField("Mot de passe", null, 50, TextField.PASSWORD);
     Command cnx = new Command("Connecter", Command.OK, 0);
     
-    //client profil
-    Form profil = new Form("                           Profil");
+    // profil client
+    Form profilc = new Form("                           Profil");
     StringItem snom = new StringItem("Nom", null);
     StringItem sprenom = new StringItem("Prénom", null);
     StringItem smail = new StringItem("Mail", null);
     StringItem spassword = new StringItem("Mot de passe", null);
     StringItem sdate= new StringItem("Date naissance", null);
-    
     Ticker tick_client = new Ticker("Vous êtes le bienvenus dans votre espace");
     Command modifier_p = new Command("Modifier profil", Command.OK, 0);
-    Command ch_nom= new Command("Chercher par nom", Command.OK, 2);
-    Command ch_sp= new Command("Chercher par Spécialité", Command.OK, 3);
-    Command ch_type = new Command("Chercher par type", Command.OK, 4);
-    Command t_soire = new Command("Trouver votre soiré", Command.OK, 5);
-    Command reservation = new Command("Consulter vos réservation", Command.OK, 6);
-    Command nouv = new Command("Nouveautés", Command.OK, 1);
     Command deco = new Command("Deconnecter", Command.CANCEL, 0);
+    // profil restaurateur
+    Form profilr = new Form("                           Profil");
+    Command identifier = new Command("identifier votre espace", Command.SCREEN, 0);
     //modifier profil
     Image confirmer;
     Alert ok;
@@ -70,17 +65,10 @@ String reponse;
     TextField tmail= new TextField("Login", null, 50, TextField.ANY);
     TextField tpassword= new TextField("Mot de passe", null, 50, TextField.ANY);
     DateField date = new DateField("Date naissance", DateField.DATE);
-     Command modifier = new Command("Modifier", Command.OK, 1);
-      Command retour = new Command("Retoure", Command.OK, 0);
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    Command modifier = new Command("Modifier", Command.OK,0);
+    Command retour = new Command("Retoure", Command.CANCEL, 0);
+
+      
     public void startApp() {
         //paged'accueil
          try {
@@ -100,29 +88,22 @@ erreur = new Alert(null,null, alert, AlertType.ERROR);
       accueil.setCommandListener(this);
       accueil.addCommand(cnx);
       dis.setCurrent(accueil);
-      //Profil
-    profil.setTicker(tick_client);
-    profil.append(snom);
-    profil.append(sprenom);
-    profil.append(smail);
-    profil.append(spassword);
-    profil.append(sdate);
-    profil.setCommandListener(this);
-    profil.addCommand(t_soire);
-    profil.addCommand(modifier_p);
-    profil.addCommand(ch_nom);
-    profil.addCommand(ch_type);
-    profil.addCommand(ch_sp);
-    profil.addCommand(reservation);
-    profil.addCommand(nouv);
-    profil.addCommand(deco);
+      //Profil client
+
+      
+      
+      
+      
+       //Profil restaurateur  
+    profilr.addCommand(identifier);
+  
     //modifier profil
           try {
           confirmer = Image.createImage("/confirmer.png");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-          ok = new Alert(null,"     Taitement effectuer avec succé", confirmer, AlertType.INFO);
+          ok = new Alert(null,"        Taitement effectuer avec succé", confirmer, AlertType.INFO);
 
     Date d = new Date();
     date.setDate(d);
@@ -168,14 +149,19 @@ erreur = new Alert(null,null, alert, AlertType.ERROR);
       }
       }
        else if((c == retour)&&(d==modifier_profil))
-      {
-      dis.setCurrent(profil);
+      {Profil();
+      dis.setCurrent(profilc);
       }
          else if(c ==deco)
       {
      dis.setCurrent(accueil);
      mail.setString("");
      pwd.setString("");
+      }
+        else if(c ==identifier)
+      {
+          
+    dis.setCurrent(new makerRestaurent(this, d));
       }
     }
 
@@ -189,19 +175,18 @@ erreur = new Alert(null,null, alert, AlertType.ERROR);
          }        
  else if(resultat.equalsIgnoreCase("client"))
  {
-    clients= cx.ConnexionListe(mail.getString(), pwd.getString());
-            if (clients.length > 0) {
-                for (int i = 0; i < clients.length; i++) {
-                    snom.setText(clients[i].getNom());
-                    sprenom.setText(clients[i].getPrenom());
-                    smail.setText(clients[i].getMail());
-                    spassword.setText(clients[i].getPassword());
-                     sdate.setText(clients[i].getDate());  
-                }
-            }
-
- dis.setCurrent(profil);
- } }           
+   Profil();
+   AjoutProfil(profilc);
+  dis.setCurrent(profilc);   
+           
+ }
+  else if(resultat.equalsIgnoreCase("restaurateur"))
+ {  
+     Profil(); 
+     AjoutProfil(profilr);
+    dis.setCurrent(profilr);    
+           
+ }   
  else if (reponse=="modifier")
                {
                    String d =date.getDate().toString().replace(' ','*');                 
@@ -211,6 +196,33 @@ resultat=cx.Modification_profil (mail.getString(),pwd.getString(),tmail.getStrin
                }
            
 }
+       }
+         public void Profil()
+           {
+           clients= cx.ConnexionListe(mail.getString(), pwd.getString());
+            if (clients.length > 0) {
+                for (int i = 0; i < clients.length; i++) {
+                    snom.setText(clients[i].getNom());
+                    sprenom.setText(clients[i].getPrenom());
+                    smail.setText(clients[i].getMail());
+                    spassword.setText(clients[i].getPassword());
+                     sdate.setText(clients[i].getDate());  
+               
+                }
+            }
+} 
+            public void AjoutProfil(Form f)
+           {
+    f.setTicker(tick_client);
+    f.append(snom);
+    f.append(sprenom);
+    f.append(smail);
+    f.append(spassword);
+    f.append(sdate);
+    f.setCommandListener(this);
+    f.addCommand(modifier_p);
+    f.addCommand(deco);
+} 
        public void validate() {
         Thread t = new Thread(this);
         t.start();
