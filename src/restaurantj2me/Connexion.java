@@ -119,9 +119,32 @@ public String ConnexionXY(String login, String pwd,double x,double y)
         }
         String resultat = str.toString().trim();
         return resultat;
-   
     }
-    
+
+    public String insertionClient (String login, String pwd, String nom, String prenom, String type, String date) 
+    {
+       
+        HttpConnection hc;
+        DataInputStream dc;
+        StringBuffer str = new StringBuffer("");
+        String parametre;  
+        parametre = "mail=" + login + "&pwd=" + pwd + "&nom=" + nom + "&prenom=" + prenom + "&type=" + type + "&date=" + date.trim();
+        System.out.println("aaaaa"+parametre);
+        try {
+             url = "http://127.0.0.1/J2ME/ajout_client.php?";
+            hc = (HttpConnection) Connector.open(url + parametre);
+            dc = new DataInputStream(hc.openInputStream());
+            int ch;
+            while ((ch = dc.read()) != -1) {
+                str.append((char) ch);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        String resultat = str.toString().trim();
+        return resultat;
+   
+    }    
     }
 
    

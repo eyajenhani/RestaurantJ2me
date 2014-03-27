@@ -38,6 +38,7 @@ String reponse;
     Form accueil = new Form("                           RESTO-TUNISIE");
     Image imageAccueil;
     Image alert;
+      Image inscription;
     Alert erreur;  
     TextField mail= new TextField("Login", null, 50, TextField.ANY);
     TextField pwd= new TextField("Mot de passe", null, 50, TextField.PASSWORD);
@@ -67,6 +68,7 @@ String reponse;
     DateField date = new DateField("Date naissance", DateField.DATE);
     Command modifier = new Command("Modifier", Command.OK,0);
     Command retour = new Command("Retoure", Command.CANCEL, 0);
+    //inscription
 
       
     public void startApp() {
@@ -76,12 +78,14 @@ String reponse;
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        
 erreur = new Alert(null,null, alert, AlertType.ERROR);
           try {
              imageAccueil = Image.createImage("/logo.png");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+         
       accueil.append(imageAccueil);
       accueil.append(mail);
       accueil.append(pwd);
@@ -103,7 +107,7 @@ erreur = new Alert(null,null, alert, AlertType.ERROR);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-          ok = new Alert(null,"        Taitement effectuer avec succé", confirmer, AlertType.INFO);
+          ok = new Alert(null,"        Taitement effectué avec succé", confirmer, AlertType.INFO);
 
     Date d = new Date();
     date.setDate(d);
