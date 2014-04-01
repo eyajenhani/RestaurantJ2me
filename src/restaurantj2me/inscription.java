@@ -59,7 +59,7 @@ public class inscription extends MIDlet implements CommandListener,Runnable{
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-          Aj = new Alert(null,"                  Ajout éffectué",Ajout, AlertType.INFO);
+          Aj = new Alert(null,"Ajout éffectué",Ajout, AlertType.INFO);
               Date d = new Date();
                   try {
             inscription= Image.createImage("/inscription.jpg");
