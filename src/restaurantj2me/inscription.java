@@ -26,7 +26,7 @@ import javax.microedition.midlet.*;
  * @author Eya
  */
 public class inscription extends MIDlet implements CommandListener,Runnable{
-    Form inscrit = new Form("                      Formulaire d'inscription");
+    Form inscrit = new Form("Formulaire d'inscription");
     Image alert;
     Image inscription;
     Alert erreur; 

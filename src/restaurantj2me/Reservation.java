@@ -13,14 +13,14 @@ public class Reservation {
      private int num_reservation;
     private String date;
     private String heure;
-   private int nbr_personnes;
+   private int nbr_personne;
    // private int id_clientabonne;
 
     public Reservation(int num_reservation, String date, String heure, int nbr_personnes) {
         this.num_reservation = num_reservation;
         this.date = date;
         this.heure = heure;
-        this.nbr_personnes = nbr_personnes;
+        this.nbr_personne = nbr_personne;
         //this.id_clientabonne = id_clientabonne;
         //this.id_resto = id_resto;
     }
@@ -70,48 +70,52 @@ public class Reservation {
         this.heure = heure;
     }
 
-    public int getNbr_personnes() {
-        return nbr_personnes;
+    public int getNbr_personne() {
+        return nbr_personne;
     }
 
     public void setNbr_personnes(int nbr_personnes) {
-        this.nbr_personnes = nbr_personnes;
+        this.nbr_personne = nbr_personne;
+    }
+    Reservation getReservation() {
+        return null;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 59 * hash + this.num_reservation;
-        hash = 59 * hash + Objects.hashCode(this.date);
-        hash = 59 * hash + Objects.hashCode(this.heure);
-        hash = 59 * hash + this.nbr_personnes;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Reservation other = (Reservation) obj;
-        if (this.num_reservation != other.num_reservation) {
-            return false;
-        }
-        if (!Objects.equals(this.date, other.date)) {
-            return false;
-        }
-        if (!Objects.equals(this.heure, other.heure)) {
-            return false;
-        }
-        if (this.nbr_personnes != other.nbr_personnes) {
-            return false;
-        }
-        return true;
-    }
     
+    
+//    public int hashCode() {
+//        int hash = 3;
+//        hash = 59 * hash + this.num_reservation;
+//        hash = 59 * hash + Objects.hashCode(this.date);
+//        hash = 59 * hash + Objects.hashCode(this.heure);
+//        hash = 59 * hash + this.nbr_personnes;
+//        return hash;
+//    }
+
+    
+//    public boolean equals(Object obj) {
+//        if (obj == null) {
+//            return false;
+//        }
+//        if (getClass() != obj.getClass()) {
+//            return false;
+//        }
+//        final Reservation other = (Reservation) obj;
+//        if (this.num_reservation != other.num_reservation) {
+//            return false;
+//        }
+//        if (!Objects.equals(this.date, other.date)) {
+//            return false;
+//        }
+//        if (!Objects.equals(this.heure, other.heure)) {
+//            return false;
+//        }
+//        if (this.nbr_personnes != other.nbr_personnes) {
+//            return false;
+//        }
+//        return true;
+//    }
+//    
     
 
 }
