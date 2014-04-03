@@ -4,9 +4,13 @@
  */
 package restaurantj2me;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Date;
+import javax.microedition.io.Connector;
+import javax.microedition.io.HttpConnection;
 import javax.microedition.lcdui.Alert;
+import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.ChoiceGroup;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
@@ -26,10 +30,11 @@ public class AjoutReservation extends MIDlet implements CommandListener, Runnabl
     Image alert;
     //Image inscription;
     Alert erreur; 
+    Form f2 = new Form("Rreservation Ajoutée");
     Display disp =  Display.getDisplay(this); 
-    
+     Alert alerta = new Alert("Error", "Sorry", null, AlertType.ERROR);
       
-     TextField theure= new TextField("Hheure de la resevation", null, 50, TextField.ANY);
+     TextField theure= new TextField("Heure de la resevation", null, 50, TextField.ANY);
      DateField tdate_reservation = new DateField(" La Date de la reservation", DateField.DATE);
      TextField tnbrpersonnes = new TextField("Le nombre de personnes", null, 50, TextField.NUMERIC);
     //TextField tpassword= new TextField("Mot de passe", null, 50, TextField.ANY);
@@ -42,6 +47,12 @@ public class AjoutReservation extends MIDlet implements CommandListener, Runnabl
     Alert Aj;
     ChoiceGroup choix;
     String dt;
+    
+    HttpConnection hc;
+    DataInputStream dis;
+    String url = "http://localhost/connect/ajoutreservation.php";
+    StringBuffer sb = new StringBuffer();
+    int ch;
 
     public void startApp() {
          try {
@@ -74,10 +85,28 @@ public class AjoutReservation extends MIDlet implements CommandListener, Runnabl
     }
 
     public void commandAction(Command c, Displayable d) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (c == ajouter) {
+            Thread th = new Thread(this);
+            th.start();
+        }
+        
     }
 
     public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         try {
+                hc = (HttpConnection) Connector.open(url+"?heure="+theure.getString()+"&date_reservation=12/04/2014"+"&nb_personne="+tnbrpersonnes.getString());
+                dis = new DataInputStream(hc.openDataInputStream());
+                while ((ch = dis.read()) != -1) {                    
+                    sb.append((char)ch);
+                }
+                if ("successfully added".equalsIgnoreCase(sb.toString().trim())) {
+                    disp.setCurrent(f2);
+                }else{
+                    disp.setCurrent(alerta);
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        
     }
 }

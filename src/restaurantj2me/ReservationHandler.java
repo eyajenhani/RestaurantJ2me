@@ -69,8 +69,6 @@ public class ReservationHandler extends DefaultHandler{
             nbr_personneTag = "close";
         }
         
-        
-        
     }
     // "characters" are the text inbetween tags
 
@@ -85,16 +83,15 @@ public class ReservationHandler extends DefaultHandler{
                 if (heureTag.equals("open")) {
                 String heure = new String(ch, start, length).trim();
                 currentReservation.setHeure(heure);
-//            } else
-//                    if (nbr_personnesTag.equals("open")) {
-//                String  nbr_persoones = new String(ch, start, length).trim();
-//                currentReservation.setNbr_personnes("nbr_persoones");
-//            }
+            } else
+                    if (nbr_personneTag.equals("open")) {
+                String  nbr_personnes = new String(ch, start, length).trim();
+                currentReservation.setNbr_personnes(nbr_personnes);
+            }
             
             
         }
     }
     
     }
-}
 

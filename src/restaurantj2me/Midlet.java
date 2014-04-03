@@ -8,10 +8,14 @@ package restaurantj2me;
  * and open the template in the editor.
  */
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Date;
+import javax.microedition.io.Connector;
+import javax.microedition.io.HttpConnection;
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
+import javax.microedition.lcdui.ChoiceGroup;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.DateField;
@@ -33,9 +37,10 @@ Connexion cx = new Connexion();
 String resultat;
 String reponse;
   Client[] clients;
+  Reservation [] reservations;
 
 //Paged'accueil
-    Form accueil = new Form("                           RESTO-TUNISIE");
+    Form accueil = new Form("RESTO-TUNISIE");
     Image imageAccueil;
     Image alert;
       Image inscription;
@@ -69,7 +74,55 @@ String reponse;
     Command modifier = new Command("Modifier", Command.OK,0);
     Command retour = new Command("Retoure", Command.CANCEL, 0);
     //inscription
-
+    
+    // gerer reservation 
+    Form freservation = new Form("Reservation");
+     Form fAjoutr = new Form("Ajouter reservation");
+     Form fConsulterreservation = new Form("Consulter Reservation");
+     Form fModifr = new Form("Modifier Reservation");
+     Form fSuppr = new Form("Supprimer Reservation");
+     Command GReservation=  new Command(" Gere Reservation", Command.SCREEN, 0);
+     private ChoiceGroup cgReservation;
+     Command cmReservation = new Command("ok", Command.SCREEN,2);
+     Command CmRetour = new Command("retour", Command.CANCEL, 0);
+     Image img;
+     // Consulter reservation
+     StringItem sidreserv = new StringItem("Identifiant de la reservation:", null);
+    StringItem sdatereserv = new StringItem("Date de la reservation:", null);
+    StringItem sheurereserv = new StringItem("Heure de la reservation:", null);
+    StringItem snbrpersonne = new StringItem("Le nombre des persones:", null);
+    
+    // Ajouter et modifier reservation 
+    
+    Alert succee = new Alert("succée ", "Ajout effectué avec sucée", null, AlertType.CONFIRMATION);
+    Form inscrit = new Form("formulaire de reservation");
+    Image alertt;
+    //Image inscription;
+    Alert erreure; 
+    Form f2 = new Form("Rreservation Ajoutée");
+    Display disp =  Display.getDisplay(this); 
+     Alert alerta = new Alert("Error", "Sorry", null, AlertType.ERROR);
+      Ticker tick_reserv = new Ticker("Vous êtes le bienvenu pour effectuer votre reservation");
+     TextField theure= new TextField("Heure de la resevation", null, 50, TextField.ANY);
+     DateField tdate_reservation = new DateField(" La Date de la reservation", DateField.DATE);
+     TextField tnbrpersonnes = new TextField("Le nombre de personnes", null, 50, TextField.NUMERIC);
+    //TextField tpassword= new TextField("Mot de passe", null, 50, TextField.ANY);
+    Command ajouter = new Command("Ajouter", Command.OK, 0);
+    Command retoure = new Command("retour", Command.CANCEL, 0);
+    
+  
+    Connexion cxx = new Connexion();
+    Image reserv;
+    Alert Aj;
+    ChoiceGroup choix;
+    String dt;
+    
+    HttpConnection hc;
+    DataInputStream disput;
+    String url = "http://localhost/connect/ajoutreservation.php";
+    StringBuffer sb = new StringBuffer();
+    int ch;
+     
       
     public void startApp() {
         //paged'accueil
@@ -85,7 +138,26 @@ erreur = new Alert(null,null, alert, AlertType.ERROR);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-         
+           try {
+          reserv = Image.createImage("/reservation.jpg");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+         Date d = new Date();
+         freservation.setTicker(tick_reserv);
+        inscrit.append(reserv);
+        
+        inscrit.append(theure);
+        inscrit.append(tdate_reservation);
+       tdate_reservation.setDate(d);
+        inscrit.append(tnbrpersonnes);
+        inscrit.addCommand(ajouter);
+        inscrit.addCommand(retour);
+        inscrit.setCommandListener(this);
+       // inscrit.append(alert);
+        disp.setCurrent(inscrit);
+   
+        
       accueil.append(imageAccueil);
       accueil.append(mail);
       accueil.append(pwd);
@@ -109,7 +181,7 @@ erreur = new Alert(null,null, alert, AlertType.ERROR);
         }
           ok = new Alert(null,"        Taitement effectué avec succé", confirmer, AlertType.INFO);
 
-    Date d = new Date();
+   // Date d = new Date();
     date.setDate(d);
     modifier_profil.setCommandListener(this);
     modifier_profil.addCommand(modifier);
@@ -167,6 +239,10 @@ erreur = new Alert(null,null, alert, AlertType.ERROR);
           
     dis.setCurrent(new makerRestaurent(this, d));
       }
+       if (c == ajouter) {
+            Thread th = new Thread(this);
+            th.start();
+        }
     }
 
        public void run() {
@@ -200,7 +276,23 @@ resultat=cx.Modification_profil (mail.getString(),pwd.getString(),tmail.getStrin
                }
            
 }
-       }
+           try {
+                hc = (HttpConnection) Connector.open(url+"?heure="+theure.getString()+"&date_reservation=12/04/2014"+"&nb_personne="+tnbrpersonnes.getString());
+                disput = new DataInputStream(hc.openDataInputStream());
+                while ((ch = disput.read()) != -1) {                    
+                    sb.append((char)ch);
+                }
+                if ("successfully added".equalsIgnoreCase(sb.toString().trim())) {
+                    disp.setCurrent(f2);
+                }else{
+                    disp.setCurrent(alerta);
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        
+    }
+       
          public void Profil()
            {
            clients= cx.ConnexionListe(mail.getString(), pwd.getString());

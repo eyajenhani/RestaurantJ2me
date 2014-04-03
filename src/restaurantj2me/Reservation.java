@@ -1,6 +1,6 @@
 /*
  * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * and open thetemplate in the editor.
  */
 
 package restaurantj2me;
@@ -116,6 +116,10 @@ public class Reservation {
 //        return true;
 //    }
 //    
+
+    void setNbr_personnes(String nbr_personnes) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 
 }

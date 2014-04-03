@@ -23,6 +23,7 @@ public class Connexion {
 //    Display dis =  Display.getDisplay(this);    
     String url;
     Client[] clients;
+      Reservation [] reservations;
 
    public String ConnexionChaine(String login, String pwd) 
     {
@@ -143,8 +144,63 @@ public String ConnexionXY(String login, String pwd,double x,double y)
         }
         String resultat = str.toString().trim();
         return resultat;
+        
    
-    }    
+    } 
+    
+    // Insertion Rreservation Hiba
+     public String insertionReservation ( int num_reservation, String date, String heure, int nbr_personne)
+    {
+       
+        HttpConnection hc;
+        DataInputStream dc;
+        StringBuffer str = new StringBuffer("");
+        String parametre;  
+        parametre = "&num_reservation=" + num_reservation+ "&date=" + date.trim() + "&heure=" + heure + "&nbr_personne=" + nbr_personne ;
+        System.out.println("aaaaa"+parametre);
+        try {
+             url = "http://localhost/connect/ajoutreservation.php?";
+            hc = (HttpConnection) Connector.open(url + parametre);
+            dc = new DataInputStream(hc.openInputStream());
+            int ch;
+            while ((ch = dc.read()) != -1) {
+                str.append((char) ch);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        String resultat = str.toString().trim();
+        return resultat;
+   
+    } 
+    // Modifier Reservation Hiba
+    public String Modifier_Reservation(int num_reservation, String date, String heure, int nbr_personne)
+         
+    {
+
+        HttpConnection hc;
+        DataInputStream dc;
+        StringBuffer str = new StringBuffer("");
+        String parametre;
+        parametre = "&num_reservation=" + num_reservation+ "&date=" + date.trim() + "&heure=" + heure + "&nbr_personne=" + nbr_personne ;
+        
+        System.out.println("aaaaa"+parametre);
+        try {
+             url = "http://localhost/connect/modifier_reservation.php?";
+            hc = (HttpConnection) Connector.open(url + parametre);
+            dc = new DataInputStream(hc.openInputStream());
+            int ch;
+            while ((ch = dc.read()) != -1) {
+                str.append((char) ch);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        String resultat = str.toString().trim();
+        return resultat;
+
+    }
+
     }
 
    
